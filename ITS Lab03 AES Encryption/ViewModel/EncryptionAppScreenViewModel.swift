@@ -29,7 +29,7 @@ final class EncryptionAppScreenViewModel: ObservableObject {
     func crypt() {
         guard Int.allowedKeySizes.contains(key.bytes.count) else {
             output = nil
-            errorMessage = "Ihr Schlüssel muss \(Int.allowedKeySizes) Zeichen lang sein."
+            errorMessage = "Your key must be \(Int.allowedKeySizes) bytes long."
             return
         }
         guard Int.ivRange.contains(iv.bytes.count) else {
@@ -51,7 +51,7 @@ final class EncryptionAppScreenViewModel: ObservableObject {
             errorMessage = nil
         } catch {
             print("###Error: \(error)")
-            errorMessage = "Ein unbekannter Fehler ist aufgetreten."
+            errorMessage = "An unknown error occured."
             output = nil
         }
     }

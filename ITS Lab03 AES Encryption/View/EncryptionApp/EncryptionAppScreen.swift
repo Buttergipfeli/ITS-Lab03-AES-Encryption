@@ -33,7 +33,7 @@ struct EncryptionAppScreen: View {
                         NSPasteboard.general.clearContents()
                         NSPasteboard.general.setString(viewModel.output ?? "", forType: .string)
                     } label: {
-                        Text("Kopieren")
+                        Text("Copy")
                     }
                 }
             }

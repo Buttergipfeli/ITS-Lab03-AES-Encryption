@@ -10,6 +10,7 @@ final class EncryptionAppScreenViewModel: ObservableObject {
     @Published var input: String = ""
     @Published var key: String = ""
     @Published var iv: String = ""
+    @Published var useIV = false
     
     @Published private(set) var output: String?
     @Published private(set) var errorMessage: String?
@@ -32,13 +33,13 @@ final class EncryptionAppScreenViewModel: ObservableObject {
             errorMessage = "Your key must be \(Int.allowedKeySizes) bytes long."
             return
         }
-        guard Int.ivRange.contains(iv.bytes.count) else {
+        guard !useIV || Int.ivRange.contains(iv.bytes.count) else {
             output = nil
             errorMessage = "IV must be in \(Int.ivRange)"
             return
         }
                 
-        let mode = AESIVWithTag(iv: iv, mode: aesIVWithTagMode)
+        let mode = AESIVWithTag(iv: useIV ? iv : nil, mode: aesIVWithTagMode)
         
         do {
             switch cryptoMode {

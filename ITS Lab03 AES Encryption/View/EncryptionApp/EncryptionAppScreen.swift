@@ -11,7 +11,7 @@ struct EncryptionAppScreen: View {
                 
                 InputWithLabel(label: "Key", sanitize: true, input: $viewModel.key, generator: viewModel.generateKey)
                 
-                InputWithLabel(label: "IV", sanitize: true, input: $viewModel.iv, generator: viewModel.generateIV)
+                InputWithLabel(label: "IV", sanitize: true, input: $viewModel.iv, toggle: $viewModel.useIV, generator: viewModel.generateIV)
                 
                 InputWithLabel(label: viewModel.inputHint, input: $viewModel.input)
             }

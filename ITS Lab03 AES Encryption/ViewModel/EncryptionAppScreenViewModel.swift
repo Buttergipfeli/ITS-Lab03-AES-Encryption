@@ -50,8 +50,11 @@ final class EncryptionAppScreenViewModel: ObservableObject {
             
             errorMessage = nil
         } catch {
-            print("###Error: \(error)")
-            errorMessage = "An unknown error occured."
+            if "\(error)" == "fail" {
+                errorMessage = "The decoding or encoding failed. Probably the key or iv are wrong."
+            } else {
+                errorMessage = "An unknown error occured: \(error)."
+            }
             output = nil
         }
     }

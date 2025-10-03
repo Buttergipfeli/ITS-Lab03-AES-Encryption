@@ -4,21 +4,23 @@ import Security
 
 // DOC: https://cryptoswift.io/#aes-gcm
 final class AESIVWithTagEncryptionService: AESIVWithTagEncryptionServiceProtocol {
-    func encrypt(text: String, mode: AESIVWithTagMode, key: String) throws -> String {
-        let blockMode = mode.blockMode(messageLength: text.count, encrypt: true)
-        
+    func encrypt(text: String, mode: AESIVWithTag, key: String) throws -> String {
+        let plaintextBytes = Array(text.utf8)
+        let blockMode = mode.blockMode(messageLength: plaintextBytes.count, mode: .encrypt)
         let aes = try AES(key: key.bytes, blockMode: blockMode, padding: .noPadding)
-        let encryptedBytes = try Array(aes.encrypt(text.bytes))
+        let encryptedBytes = try aes.encrypt(plaintextBytes)
         
-        return String(decoding: encryptedBytes, as: UTF8.self)
+        return Data(encryptedBytes).base64EncodedString()
     }
     
-    func decrypt(encryptedText: String, mode: AESIVWithTagMode, key: String) throws -> String {
-        let blockMode = mode.blockMode(messageLength: encryptedText.count, encrypt: false)
-        
+    func decrypt(encryptedText: String, mode: AESIVWithTag, key: String) throws -> String {
+        guard let cipherData = Data(base64Encoded: encryptedText) else { return "" }
+        let cipherBytes = [UInt8](cipherData)
+        let blockMode = mode.blockMode(messageLength: key.bytes.count, mode: .decrypt)
         let aes = try AES(key: key.bytes, blockMode: blockMode, padding: .noPadding)
-        let decryptedBytes = try Array(aes.decrypt(encryptedText.bytes))
+        let decryptedBytes = try aes.decrypt(cipherBytes)
+        let plaintext = String(bytes: decryptedBytes, encoding: .utf8)
         
-        return String(decoding: decryptedBytes, as: UTF8.self)
+        return plaintext ?? ""
     }
 }

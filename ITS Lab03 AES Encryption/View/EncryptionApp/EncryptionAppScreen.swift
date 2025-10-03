@@ -1,4 +1,5 @@
 import SwiftUI
+internal import UniformTypeIdentifiers
 
 struct EncryptionAppScreen: View {
     @StateObject private var viewModel = EncryptionAppScreenViewModel()
@@ -17,12 +18,54 @@ struct EncryptionAppScreen: View {
                     InputWithLabel(label: viewModel.inputHint, input: $viewModel.input)
                 }
                 
-                Button {
-                    viewModel.crypt()
-                } label: {
-                    Text(viewModel.actionButtonTitle)
+                HStack {
+                    Button {
+                        viewModel.cipherText()
+                    } label: {
+                        Text(viewModel.actionButtonTitle)
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        viewModel.fileCryptoMode = .encrypt
+                        viewModel.isFileImporterPresent = true
+                    } label: {
+                        Text("Encode file")
+                    }
+                    
+                    Button {
+                        viewModel.fileCryptoMode = .decrypt
+                        viewModel.isFileImporterPresent = true
+                    } label: {
+                        Text("Decode file")
+                    }
                 }
-                .frame(maxWidth: .infinity)
+                .fileImporter(
+                    isPresented: $viewModel.isFileImporterPresent,
+                    allowedContentTypes: [.item],
+                    allowsMultipleSelection: false
+                ) { result in
+                    do {
+                        guard let selectedFile = try result.get().first else { return }
+                        let data = try Data(contentsOf: selectedFile)
+                        
+                        let granted = selectedFile.startAccessingSecurityScopedResource()
+                        defer { if granted { selectedFile.stopAccessingSecurityScopedResource() } }
+                        
+                        
+                        switch viewModel.fileCryptoMode {
+                        case .encrypt:
+                            viewModel.encryptFile(of: selectedFile, data: data)
+                        case .decrypt:
+                            viewModel.decryptFile(of: selectedFile, data: data)
+                        case .none:
+                            return
+                        }
+                    } catch {
+                        print(error)
+                    }
+                }
                 
                 if let output = viewModel.output {
                     VStack(alignment: .leading) {

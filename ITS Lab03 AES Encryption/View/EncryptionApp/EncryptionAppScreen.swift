@@ -61,7 +61,6 @@ private extension CGFloat {
     static let screenMinWidth = 400.0
     static let screenMinHeight = 300.0
     static let screenMaxWidth = 500.0
-    static let screenMaxHeight = 300.0
     
     static let labelSpacing = 14.0
     static let elementSpacing = 24.0

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F10F70052E8FF92C0016C186 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F10F70042E8FF92C0016C186 /* CryptoSwift */; };
-		F192111C2E9058C80082AED5 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = F192111B2E9058C50082AED5 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -131,7 +130,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F192111C2E9058C80082AED5 /* README.md in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

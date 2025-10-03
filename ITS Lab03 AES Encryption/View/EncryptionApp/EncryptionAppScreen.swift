@@ -4,48 +4,51 @@ struct EncryptionAppScreen: View {
     @StateObject private var viewModel = EncryptionAppScreenViewModel()
         
     var body: some View {
-        VStack(alignment: .leading, spacing: .elementSpacing) {
-            VStack(alignment: .leading, spacing: .labelSpacing) {
-                PickerWithLabel(label: "AES Mode", selections: AESIVWithTagMode.allCases, selection: $viewModel.aesIVWithTagMode)
-                PickerWithLabel(label: "Encryption Mode", selections: CryptoMode.allCases, selection: $viewModel.cryptoMode)
-                
-                InputWithLabel(label: "Key", sanitize: true, input: $viewModel.key, generator: viewModel.generateKey)
-                
-                InputWithLabel(label: "IV", sanitize: true, input: $viewModel.iv, toggle: $viewModel.useIV, generator: viewModel.generateIV)
-                
-                InputWithLabel(label: viewModel.inputHint, input: $viewModel.input)
-            }
-            
-            Button {
-                viewModel.crypt()
-            } label: {
-                Text(viewModel.actionButtonTitle)
-            }
-            .frame(maxWidth: .infinity)
-            
-            if let output = viewModel.output {
-                VStack(alignment: .leading) {
-                    Text(output)
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
+        ScrollView {
+            VStack(alignment: .leading, spacing: .elementSpacing) {
+                VStack(alignment: .leading, spacing: .labelSpacing) {
+                    PickerWithLabel(label: "AES Mode", selections: AESIVWithTagMode.allCases, selection: $viewModel.aesIVWithTagMode)
+                    PickerWithLabel(label: "Encryption Mode", selections: CryptoMode.allCases, selection: $viewModel.cryptoMode)
                     
-                    Button {
-                        NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString(viewModel.output ?? "", forType: .string)
-                    } label: {
-                        Text("Copy")
+                    InputWithLabel(label: "Key", sanitize: true, input: $viewModel.key, generator: viewModel.generateKey)
+                    
+                    InputWithLabel(label: "IV", sanitize: true, input: $viewModel.iv, toggle: $viewModel.useIV, generator: viewModel.generateIV)
+                    
+                    InputWithLabel(label: viewModel.inputHint, input: $viewModel.input)
+                }
+                
+                Button {
+                    viewModel.crypt()
+                } label: {
+                    Text(viewModel.actionButtonTitle)
+                }
+                .frame(maxWidth: .infinity)
+                
+                if let output = viewModel.output {
+                    VStack(alignment: .leading) {
+                        Text(output)
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        Button {
+                            NSPasteboard.general.clearContents()
+                            NSPasteboard.general.setString(viewModel.output ?? "", forType: .string)
+                        } label: {
+                            Text("Copy")
+                        }
                     }
                 }
+                if let errorMessage = viewModel.errorMessage {
+                    Text(errorMessage)
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .foregroundStyle(.red)
+                }
             }
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .lineLimit(nil)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .foregroundStyle(.red)
-            }
+            .padding()
         }
-        .frame(minWidth: .screenMinWidth, minHeight: .screenMinHeight, alignment: .topLeading)
-        .frame(maxWidth: .screenMaxWidth, maxHeight: .screenMaxHeight, alignment: .topLeading)
+        .frame(minWidth: .screenMinWidth, minHeight: .screenMinHeight)
+        .frame(maxWidth: .screenMaxWidth)
         .padding()
     }
 }

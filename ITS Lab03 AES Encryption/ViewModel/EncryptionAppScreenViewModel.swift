@@ -7,9 +7,9 @@ final class EncryptionAppScreenViewModel: ObservableObject {
     
     @Published var aesIVWithTagMode: AESIVWithTagMode = .gcm
     @Published var cryptoMode: CryptoMode = .encrypt
-    @Published var input: String = "Maschine"
-    @Published var key: String = "abcdefabcdefabcdabcdefabcdefabcd"
-    @Published var iv: String = "adsfjlkaasdfjd"
+    @Published var input: String = ""
+    @Published var key: String = ""
+    @Published var iv: String = ""
     
     @Published private(set) var output: String?
     @Published private(set) var errorMessage: String?
